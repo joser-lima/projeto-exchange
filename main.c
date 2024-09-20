@@ -14,6 +14,12 @@ typedef struct {
 void cadastrar();
 void login();
 void menuopcoes();
+void deposito();
+void saque();
+void extrato();
+void compracripto();
+void vendacripto();
+void cotacao();
 
 // Função principal
 int main() {
@@ -50,7 +56,7 @@ int main() {
 
 // Implementação da função para cadastrar um usuário
 void cadastrar() {
-    FILE *file = fopen("usuarios.bin", "wb");  // Abre o arquivo em modo de adição (append)
+    FILE *file = fopen("usuarios.txt", "a");  // Abre o arquivo em modo de adição (append)
     if (file == NULL) {
         printf("Erro ao abrir o arquivo de usuários.\n");
         return;
@@ -87,7 +93,7 @@ void cadastrar() {
 
 // Implementação da função para verificar o login
 void login() {
-    FILE *file = fopen("usuarios.bin", "rb");  // Abre o arquivo em modo de leitura
+    FILE *file = fopen("usuarios.txt", "r");  // Abre o arquivo em modo de leitura
     if (file == NULL) {
         printf("Nenhum usuário cadastrado.\n");
         return;
@@ -104,30 +110,79 @@ void login() {
     scanf("%s", input_senha);
 
     // Procura o CPF e a senha no arquivo
-    while (fscanf(file, "%s %s %s", nome, cpf, senha) != EOF) {
+    fscanf(file, "%s %s %s", nome, cpf, senha);
         if (strcmp(cpf, input_cpf) == 0 && strcmp(senha, input_senha) == 0) {
             printf("Login bem-sucedido! Bem-vindo(a), %s.\n", nome);
             menuopcoes();
         }
     }
-}
 
 void menuopcoes(){
 
     int respmenu;
-
     printf("O que deseja fazer? \n");
     printf("1 - Deposito \n");
     printf("2 - Saque \n");
-    printf("3 - Extrato \n");
-    printf("5 - Compra de Cripto \n");
-    printf("6 - Venda de Cripto \n");
-    printf("7 - Atualizar Cotaçãò \n");
-    printf("8 - Sair \n");
+    printf("3 - Consultar extrato \n");
+    printf("4 - Compra de Cripto \n");
+    printf("5 - Venda de Cripto \n");
+    printf("6 - Atualizar Cotaçãò \n");
+    printf("7 - Sair \n");
 
     scanf("%d", &respmenu);
 
+    if(respmenu == 1){
+        deposito();
+    }
+    else if(respmenu == 2){
+        saque();
+    }
+    else if(respmenu == 3){
+        extrato();
+    }
+    else if(respmenu == 4){
+        compracripto();
+    }
+    else if(respmenu == 5){
+        vendacripto();
+    }
+    else if(respmenu == 6){
+        cotacao();
+    }
+    else if(respmenu == 7){
+        printf("Saindo...\n");
+    }
 
+    
+}
 
+void deposito(){
+    FILE *file = fopen("usuarios.txt", "a");
+    printf("Deposito \n");
+    menuopcoes();
+}
 
+void saque(){
+    printf("Saque \n");
+    menuopcoes();
+}
+
+void extrato(){
+    printf("Consulta de extrato \n");
+    menuopcoes();
+}
+
+void compracripto(){
+    printf("Compra de cripto \n");
+    menuopcoes();
+}
+
+void vendacripto(){
+    printf("Venda de Cripto \n");
+    menuopcoes();
+}
+
+void cotacao(){
+    printf("Atualizacao da cotacao \n");
+    menuopcoes();
 }
