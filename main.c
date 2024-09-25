@@ -7,12 +7,17 @@
 typedef struct {
     char nome[100];
     char cpf[12];     // CPF com 11 dígitos + '\0'
-    char senha[7];    // Senha de até 6 dígitos + '\0'
+    char senha[7]; // Senha de até 6 dígitos + '\0'
+    float reais;
+    float btc;
+    float eth;
+    float xrp;
 } Usuario;
 
 // Protótipos das funções
-void cadastrar();
-void login();
+void saldo();
+void cadastro(Usuario *user);
+void login(Usuario *user);
 void menuopcoes();
 void deposito();
 void saque();
@@ -24,9 +29,12 @@ void cotacao();
 // Função principal
 int main() {
     setlocale(LC_ALL, "");
+
+    Usuario user;
+
     int opcao;
 
-    while (1) {
+    
         printf(" /$$$$$$$  /$$$$$$ /$$$$$$$$ /$$$$$$$  /$$   /$$ /$$     /$$ \n");
         printf("| $$__  $$|_  $$_/|__  $$__/| $$__  $$| $$  | $$|  $$   /$$/\n");
         printf("| $$  \\ $$  | $$     | $$   | $$  \\ $$| $$  | $$ \\  $$ /$$/ \n");
@@ -40,127 +48,126 @@ int main() {
         scanf("%d", &opcao);
 
         if (opcao == 1) {
-            cadastrar();
+            cadastro(&user);
         } else if (opcao == 2) {
-            login();
+            login(&user);
         } else if (opcao == 3) {
             printf("Saindo...\n");
-            break;
         } else {
             printf("Opção inválida. Tente novamente.\n");
         }
-    }
+    
 
     return 0;
 }
 
 // Implementação da função para cadastrar um usuário
-void cadastrar() {
-    FILE *file = fopen("usuarios.txt", "a");  // Abre o arquivo em modo de adição (append)
-    if (file == NULL) {
-        printf("Erro ao abrir o arquivo de usuários.\n");
-        return;
-    }
+void cadastro(Usuario *user) {
+    char lixo;
 
-    Usuario novoUsuario;
+    printf("Digite seu nome: ");
+    scanf("%s", user->nome);
 
-    printf("Digite o nome: ");
-    scanf(" %[^\n]", novoUsuario.nome);  // Lê a string até encontrar uma nova linha
+    scanf("%s", &lixo);
 
-    printf("Digite o CPF (somente números): ");
-    scanf("%s", novoUsuario.cpf);
-    if (strlen(novoUsuario.cpf) != 11) {
-        printf("CPF deve ter 11 dígitos. Tente novamente.\n");
-        fclose(file);
-        return;
-    }
+    printf("Digite seu CPF: ");
+    scanf("%s", user->cpf);
 
-    printf("Digite a senha (6 dígitos numéricos): ");
-    scanf("%s", novoUsuario.senha);
-    if (strlen(novoUsuario.senha) != 6) {
-        printf("A senha deve ter exatamente 6 dígitos. Tente novamente.\n");
-        fclose(file);
-        return;
-    }
+    printf("Digite sua senha: ");
+    scanf("%s", user->senha);
 
-    // Escreve os dados do novo usuário no arquivo
-    fprintf(file, "%s %s %s\n", novoUsuario.nome, novoUsuario.cpf, novoUsuario.senha);
-
-    printf("Usuário cadastrado com sucesso!\n");
-
-    fclose(file);  // Fecha o arquivo
+    login(user);
 }
 
 // Implementação da função para verificar o login
-void login() {
-    FILE *file = fopen("usuarios.txt", "r");  // Abre o arquivo em modo de leitura
-    if (file == NULL) {
-        printf("Nenhum usuário cadastrado.\n");
-        return;
+void login(Usuario *user) {
+    char cpfuser[12];
+    char senhauser[7];
+
+    printf("Digite seu CPF: ");
+    scanf("%s", cpfuser);
+
+    printf("Digite sua senha: ");
+    scanf("%s", senhauser);
+
+    // Comparação utilizando strcmp para comparar strings
+    if (
+        strcmp(cpfuser, user->cpf) == 0 &&
+        strcmp(senhauser, user->senha) == 0) {
+        printf("Bem-vindo, %s!\n", user->nome);
+        menuopcoes();
+    } else {
+        printf("Nome de usuário, CPF ou senha incorretos.\n");
     }
-
-    char cpf[12], senha[7], input_cpf[12], input_senha[7];
-    char nome[100];
-    int encontrado = 0;
-
-    printf("Digite o CPF: ");
-    scanf("%s", input_cpf);
-
-    printf("Digite a senha: ");
-    scanf("%s", input_senha);
-
-    // Procura o CPF e a senha no arquivo
-    fscanf(file, "%s %s %s", nome, cpf, senha);
-        if (strcmp(cpf, input_cpf) == 0 && strcmp(senha, input_senha) == 0) {
-            printf("Login bem-sucedido! Bem-vindo(a), %s.\n", nome);
-            menuopcoes();
-        }
-    }
+}
 
 void menuopcoes(){
 
+    Usuario user;
+
+    printf("%f", user.reais);
+
     int respmenu;
     printf("O que deseja fazer? \n");
-    printf("1 - Deposito \n");
-    printf("2 - Saque \n");
-    printf("3 - Consultar extrato \n");
-    printf("4 - Compra de Cripto \n");
-    printf("5 - Venda de Cripto \n");
-    printf("6 - Atualizar Cotaçãò \n");
-    printf("7 - Sair \n");
+    printf("1 - Consulta de saldo \n");
+    printf("2 - Deposito \n");
+    printf("3 - Saque \n");
+    printf("4 - Consultar extrato \n");
+    printf("5 - Compra de Cripto \n");
+    printf("6 - Venda de Cripto \n");
+    printf("7 - Atualizar Cotaçãò \n");
+    printf("8 - Sair \n");
 
     scanf("%d", &respmenu);
 
     if(respmenu == 1){
-        deposito();
+        saldo();
     }
     else if(respmenu == 2){
-        saque();
+        deposito();
     }
     else if(respmenu == 3){
-        extrato();
+        saque();
     }
     else if(respmenu == 4){
-        compracripto();
+        extrato();
     }
     else if(respmenu == 5){
-        vendacripto();
+        compracripto();
     }
     else if(respmenu == 6){
-        cotacao();
+        vendacripto();
     }
     else if(respmenu == 7){
+        cotacao();
+    }
+    else if(respmenu == 8){
         printf("Saindo...\n");
     }
 
     
 }
 
+void saldo(){
+    printf("Consulta de saldo");
+}
+
 void deposito(){
-    FILE *file = fopen("usuarios.txt", "a");
+    Usuario user;
+
+    float valor;
+
+    printf("Digite o valor que deseja depositar: \n");
+    scanf("%f", &valor);
+
+    user.reais = user.reais + valor;
+    printf("Seu novo saldo agora é de: %2.f", user.reais);
+
     printf("Deposito \n");
     menuopcoes();
 }
+
+
 
 void saque(){
     printf("Saque \n");
